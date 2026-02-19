@@ -1,11 +1,22 @@
 import torch
 import torch.nn as nn
+from torch.utils.data import TensorDataset, DataLoader
 
-model = nn.Linear(1, 1)  # single-feature linear model: y = Wx + b
+x = torch.randn(100, 1)
+y = 2 * x + 0.5
 
-x = torch.tensor([[2.0]])  # input feature (batch size 1)
-y = torch.tensor([[5.0]])  # target output
+ds = TensorDataset(x, y)
+dl = DataLoader(ds, batch_size=16, shuffle=True)
 
-pred = model(x)  # forward pass / prediction
-print(pred)  # show model's current guess
+model = nn.Linear(1, 1)
+opt = torch.optim.SGD(model.parameters(), lr=0.1)
+loss_fn = nn.MSELoss()
 
+for epoch in range(10):
+    for xb, yb in dl:
+        pred = model(xb)
+        loss = loss_fn(pred, yb)
+
+        opt.zero_grad()
+        loss.backward()
+        opt.step()

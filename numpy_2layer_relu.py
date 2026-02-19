@@ -27,9 +27,9 @@ b2 = np.zeros((1, 1))   # (1, 1)
 
 for step in range(STEPS):
     # (D) forward pass
-    z1 = x @ W1 + b1    # Linear... and whats with the @ symbol
+    z1 = x @ W1 + b1    # (200, 1) @ (1, 16) = (200, 16)
     a1 = relu(z1)       # ReLU used here
-    y_pred = a1 @ W2 + b2 # Whats with the @ symbol
+    y_pred = a1 @ W2 + b2
 
     # (E) loss
     loss = np.mean((y_pred - y)**2)

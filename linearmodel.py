@@ -10,7 +10,7 @@ y = true_w * x + true_b + 0.1 * torch.randn(100, 1) # no noise, to add noise add
 # print("y shape:", y.shape)
 
 model = nn.Linear(1, 1)                 # y = Wx + b, #2 Model
-loss_fn = nn.MSELoss()  # Means squared error
+loss_fn = nn.MSELoss()  # Mean squared error
 opt = torch.optim.SGD(model.parameters(), lr=0.1)
 
 for step in range(200):
