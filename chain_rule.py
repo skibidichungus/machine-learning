@@ -1,8 +1,8 @@
 import torch
 
 # Input and target
-x = torch.tensor([2.0])
-y = torch.tensor([4.0])
+x = torch.tensor([2.0]) # 1D tensor
+y = torch.tensor([4.0]) # 1D tensor
 
 # Weight (parameter we want to learn)
 w = torch.tensor([1.0], requires_grad=True)
