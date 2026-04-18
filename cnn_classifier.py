@@ -99,8 +99,12 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 #             - loss.backward()
 #             - optimizer.step()
 #         print average training loss for the epoch
+train_losses = []
+test_accuracies = []
+
 for epoch in range(num_epochs):
     model.train()
+    running_loss = 0.0
     for images, labels in train_loader:
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad()
@@ -108,7 +112,23 @@ for epoch in range(num_epochs):
         loss = criterion(logits, labels)
         loss.backward()
         optimizer.step()
-    print(f"Epoch {epoch + 1}/{num_epochs} - Loss: {loss.item():.4f}")
+        running_loss += loss.item()
+    epoch_loss = running_loss / len(train_loader)
+    train_losses.append(epoch_loss)
+
+    model.eval()
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for images, labels in test_loader:
+            images, labels = images.to(device), labels.to(device)
+            outputs = model(images)
+            predictions = outputs.argmax(dim=1)
+            correct += (predictions == labels).sum().item()
+            total += labels.size(0)
+    epoch_acc = 100 * correct / total
+    test_accuracies.append(epoch_acc)
+    print(f"Epoch {epoch + 1}/{num_epochs} - Loss: {epoch_loss:.4f} - Test Acc: {epoch_acc:.2f}%")
 
 
 
@@ -121,23 +141,13 @@ for epoch in range(num_epochs):
 #         - predictions = logits.argmax(dim=1)
 #         - accumulate correct / total
 # TODO: print test accuracy
-model.eval()
-correct = 0
-total = 0
-
-with torch.no_grad():
-    for images, labels in test_loader:
-        images, labels = images.to(device), labels.to(device)
-        outputs = model(images)
-        predictions = outputs.argmax(dim=1)
-        correct += (predictions == labels).sum().item()
-        total += labels.size(0)
-print(f"Test accuracy: {100 * correct / total:.2f}%")
+print(f"Final test accuracy: {test_accuracies[-1]:.2f}%")
 
 # =========================
 # 8. Save the trained model
 # =========================
 torch.save(model.state_dict(), "cnn_mnist.pt")
+torch.save({"train_losses": train_losses, "test_accuracies": test_accuracies}, "cnn_metrics.pt")
 
 
 # =========================
