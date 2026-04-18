@@ -22,6 +22,7 @@ Learning machine learning fundamentals by building things up from the basics —
 - `numpy_2layer_relu.py` — 2-layer network with ReLU, built entirely in NumPy
 - `mlp_classification.py` — MLP classifier on the Iris dataset
 - `mnist_classifier.py` — full MNIST pipeline (train, evaluate, save, load)
+- `cnn_classifier.py` — convolutional neural network for MNIST (Conv → ReLU → Pool ×2 → FC)
 
 ## Setup
 
